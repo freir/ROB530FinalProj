@@ -90,97 +90,20 @@ rosbuild_add_library(baselines
   ${PROJECT_SOURCE_DIR}/../../baselines/src/wheel_odometry/wheel_odometry.cpp)
 
 
-# example for legged robot kinemtaics correction:
-rosbuild_add_executable(mini_cheetah
-  ${PROJECT_SOURCE_DIR}/examples/mini_cheetah.cpp)
-
-target_link_libraries(mini_cheetah
-  ${LIBS}
-  ros_communication_lib
-  drift
-  yaml-cpp
-)
-
-# # temporary test for ros communicator: subscriber + publisher
-rosbuild_add_executable(husky
-  ${PROJECT_SOURCE_DIR}/examples/husky.cpp)
-
-target_link_libraries(husky
-  ${LIBS}
-  ros_communication_lib
-  drift
-  yaml-cpp
-)
-
-# # temporary test for fetch
-rosbuild_add_executable(fetch
-  ${PROJECT_SOURCE_DIR}/examples/fetch.cpp)
-
-target_link_libraries(fetch
-  ${LIBS}
-  ros_communication_lib
-  drift
-  yaml-cpp
-)
-
-# # temporary test for fetch
-rosbuild_add_executable(fetch_gyro_filter
-  ${PROJECT_SOURCE_DIR}/examples/fetch_gyro_filter.cpp)
-
-target_link_libraries(fetch_gyro_filter
-  ${LIBS}
-  ros_communication_lib
-  drift
-  yaml-cpp
-)
-
-
-rosbuild_add_executable(husky_gyro_filter
-  ${PROJECT_SOURCE_DIR}/examples/husky_gyro_filter.cpp)
-
-target_link_libraries(husky_gyro_filter
-  ${LIBS}
-  ros_communication_lib
-  drift
-  yaml-cpp
-)
-
-
-rosbuild_add_executable(husky_odom
-  ${PROJECT_SOURCE_DIR}/examples/husky_odom.cpp)
-
-target_link_libraries(husky_odom
-  ${LIBS}
-  ros_communication_lib
-  drift
-  yaml-cpp
-)
-
-
-rosbuild_add_executable(girona500
-  ${PROJECT_SOURCE_DIR}/examples/girona500.cpp)
-
-target_link_libraries(girona500
-  ${LIBS}
-  ros_communication_lib
-  drift
-  yaml-cpp
-)
-
-rosbuild_add_executable(husky_double_imu_filter
-  ${PROJECT_SOURCE_DIR}/examples/husky_double_imu_filter.cpp)
-
-target_link_libraries(husky_double_imu_filter
-  ${LIBS}
-  ros_communication_lib
-  drift
-  yaml-cpp
-)
-
 rosbuild_add_executable(neya
   ${PROJECT_SOURCE_DIR}/examples/neya.cpp)
 
 target_link_libraries(neya
+  ${LIBS}
+  ros_communication_lib
+  drift
+  yaml-cpp
+)
+
+rosbuild_add_executable(tartan
+  ${PROJECT_SOURCE_DIR}/examples/tartan.cpp)
+
+target_link_libraries(tartan
   ${LIBS}
   ros_communication_lib
   drift
@@ -195,28 +118,4 @@ target_link_libraries(neya_gyro_filter
   ros_communication_lib
   drift
   yaml-cpp
-)
-
-
-### baselines ###
-rosbuild_add_executable(fetch_wheel_odom
-  ${PROJECT_SOURCE_DIR}/baselines/fetch_wheel_odom.cpp)
-
-target_link_libraries(fetch_wheel_odom
-  ${LIBS}
-  ros_communication_lib
-  drift
-  yaml-cpp
-  baselines
-)
-
-rosbuild_add_executable(husky_wheel_odom
-  ${PROJECT_SOURCE_DIR}/baselines/husky_wheel_odom.cpp)
-
-target_link_libraries(husky_wheel_odom
-  ${LIBS}
-  ros_communication_lib
-  drift
-  yaml-cpp
-  baselines
 )

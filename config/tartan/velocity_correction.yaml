@@ -5,8 +5,8 @@ settings:
   # X pointing forward, Y to the left, Z pointing up.
   rotation_vel2body: [1, 0, 0, 0] # Orientation from velocity to the body frame. [w, x, y, z]
 
+  velocity_scale: 1.00
+
 # Velocity noise parameters:
 noises:
-  velocity_std: 0.1
-  disturbance_contact_vel_std: 0.1
-  disturbance_std: 0.01
+  velocity_std: 0.5
