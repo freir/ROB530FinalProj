@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
   /// TUTORIAL: Add a subscriber for velocity data and get its queue and mutex
   // auto qv_and_mutex = ros_sub.AddDifferentialDriveVelocitySubscriber(
   //     wheel_encoder_topic, wheel_radius);
-  auto wheel_radius_meters = 0.37; # nominal value is 25in diameter (32cm radius), experimental value 37cm
+  auto wheel_radius_meters = 0.37; // nominal value is 25in diameter (32cm radius), experimental value 37cm
   auto qv_and_mutex = ros_sub.AddDifferentialDriveVelocitySubscriber(velocity_topic, wheel_radius_meters);
   auto qv = qv_and_mutex.first;
   auto qv_mutex = qv_and_mutex.second;
