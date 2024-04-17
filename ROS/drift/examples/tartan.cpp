@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
   /// TUTORIAL: Add a subscriber for velocity data and get its queue and mutex
   // auto qv_and_mutex = ros_sub.AddDifferentialDriveVelocitySubscriber(
   //     wheel_encoder_topic, wheel_radius);
-  auto qv_and_mutex = ros_sub.AddVelocityWithCovarianceSubscriber(velocity_topic);
+  auto qv_and_mutex = ros_sub.AddDifferentialDriveVelocitySubscriber(velocity_topic,.037);
   auto qv = qv_and_mutex.first;
   auto qv_mutex = qv_and_mutex.second;
 
@@ -77,8 +77,8 @@ int main(int argc, char** argv) {
   /// for Husky robot
   inekf_estimator.add_imu_propagation(
       qimu, qimu_mutex, project_dir + "/config/tartan/imu_propagation.yaml");
-  inekf_estimator.add_velocity_correction(
-      qv, qv_mutex, project_dir + "/config/tartan/velocity_correction.yaml");
+  // inekf_estimator.add_velocity_correction(
+  //     qv, qv_mutex, project_dir + "/config/tartan/velocity_correction.yaml");
 
 
   /// TUTORIAL: Get the robot state queue and mutex from the state estimator
@@ -99,6 +99,7 @@ int main(int argc, char** argv) {
   /// "/robot/*/path"
   while (ros::ok()) {
     // Step behavior
+    // cout << "IS ENABLED: " << inekf_estimator.is_enabled() << endl;
     if (inekf_estimator.is_enabled()) {
       inekf_estimator.RunOnce();
     } else {

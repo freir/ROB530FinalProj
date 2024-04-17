@@ -116,7 +116,7 @@ ROSPublisher::ROSPublisher(ros::NodeHandle* nh,
   nh_->param<std::string>("/curly_state_est_settings/pose_topic", pose_topic,
                           "/robot/inekf_estimation/pose");
   nh_->param<std::string>("/curly_state_est_settings/map_frame_id", pose_frame_,
-                          "/odom");
+                          "/map");
   nh->param<std::string>("/curly_state_est_settings/path_topic", path_topic,
                          "/robot/inekf_estimation/path");
   nh_->param<double>("/curly_state_est_settings/pose_publish_rate",

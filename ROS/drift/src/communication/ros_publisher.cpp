@@ -25,7 +25,7 @@ ROSPublisher::ROSPublisher(ros::NodeHandle* nh,
       thread_started_(false) {
   std::string pose_topic = "/robot/inekf_estimation/pose";
   std::string path_topic = "/robot/inekf_estimation/path";
-  pose_frame_ = "/odom";
+  pose_frame_ = "/map";
   pose_publish_rate_ = 1000;    // Hz
   path_publish_rate_ = 10;      // Hz
 
