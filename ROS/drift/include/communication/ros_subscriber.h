@@ -43,6 +43,8 @@
 #include "drift/kinematics/mini_cheetah_kinematics.h"
 #include "drift/utils/type_def.h"
 
+#include "custom_sensor_msgs/rp_wheel_encoders.h"
+
 using namespace measurement;
 
 typedef std::pair<IMUQueuePtr, std::shared_ptr<std::mutex>> IMUQueuePair; /**<
@@ -71,6 +73,8 @@ typedef std::shared_ptr<
     ContactMsgFilterTPtr; /**< Pointer to the ContactMsgFilterT. */
 typedef std::shared_ptr<message_filters::Subscriber<sensor_msgs::JointState>>
     JointStateMsgFilterTPtr; /**< Pointer to the JointStateMsgFilterT. */
+typedef std::shared_ptr<message_filters::Subscriber<custom_sensor_msgs::rp_wheel_encoders>>
+    WheelEncoderMsgFilterTPtr; /**< Pointer to the JointStateMsgFilterT. */
 typedef message_filters::sync_policies::ApproximateTime<
     custom_sensor_msgs::ContactArray, sensor_msgs::JointState>
     LegKinSyncPolicy; /**< Sync policy for legged kinematics. */
@@ -297,7 +301,7 @@ class ROSSubscriber {
    * @param vel_queue: pointer to the buffer queue
    */
   void DifferentialEncoder2VelocityCallback(
-      const boost::shared_ptr<const sensor_msgs::JointState>& encoder_msg,
+      const boost::shared_ptr<const custom_sensor_msgs::rp_wheel_encoders>& encoder_msg,
       const std::shared_ptr<std::mutex>& mutex, VelocityQueuePtr& vel_queue,
       double wheel_radius);
 
@@ -313,7 +317,7 @@ class ROSSubscriber {
    * @param[in] track_width: distance between the two wheels in meters
    */
   void DifferentialEncoder2VelocityCallback(
-      const boost::shared_ptr<const sensor_msgs::JointState>& encoder_msg,
+      const boost::shared_ptr<const custom_sensor_msgs::rp_wheel_encoders>& encoder_msg,
       const std::shared_ptr<std::mutex>& vel_mutex,
       const std::shared_ptr<std::mutex>& ang_vel_mutex,
       VelocityQueuePtr& vel_queue, AngularVelocityQueuePtr& ang_vel_queue,
@@ -330,7 +334,7 @@ class ROSSubscriber {
    * @param track_width: track width
    */
   void DifferentialEncoder2LinearVelocityCallback_Fetch(
-      const boost::shared_ptr<const sensor_msgs::JointState>& encoder_msg,
+      const boost::shared_ptr<const custom_sensor_msgs::rp_wheel_encoders>& encoder_msg,
       const std::shared_ptr<std::mutex>& vel_mutex, VelocityQueuePtr& vel_queue,
       double wheel_radius);
 
@@ -347,7 +351,7 @@ class ROSSubscriber {
    * @param track_width: distance between the two wheels in meters
    */
   void DifferentialEncoder2VelocityCallback_Fetch(
-      const boost::shared_ptr<const sensor_msgs::JointState>& encoder_msg,
+      const boost::shared_ptr<const custom_sensor_msgs::rp_wheel_encoders>& encoder_msg,
       const std::shared_ptr<std::mutex>& vel_mutex,
       const std::shared_ptr<std::mutex>& ang_vel_mutex,
       VelocityQueuePtr& vel_queue, AngularVelocityQueuePtr& ang_vel_queue,
@@ -403,6 +407,7 @@ class ROSSubscriber {
 
   std::vector<ContactMsgFilterTPtr> contact_subscriber_list_;
   std::vector<JointStateMsgFilterTPtr> joint_state_subscriber_list_;
+  std::vector<WheelEncoderMsgFilterTPtr> wheel_encoder_subscriber_list_;
 
   std::vector<IMUMsgFilterTPtr> imu_subscriber_list_;
   std::vector<IMUOffsetMsgFilterTPtr> imu_offset_subscriber_list_;

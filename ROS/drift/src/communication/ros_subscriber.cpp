@@ -171,7 +171,7 @@ VelocityQueuePair ROSSubscriber::AddDifferentialDriveVelocitySubscriber(
   mutex_list_.emplace_back(new std::mutex);
 
   // Create the subscriber
-  subscriber_list_.push_back(nh_->subscribe<sensor_msgs::JointState>(
+  subscriber_list_.push_back(nh_->subscribe<custom_sensor_msgs::rp_wheel_encoders>(
       topic_name, 1000,
       boost::bind(&ROSSubscriber::DifferentialEncoder2VelocityCallback, this,
                   _1, mutex_list_.back(), vel_queue_ptr, wheel_radius)));
@@ -199,7 +199,7 @@ ROSSubscriber::AddDifferentialDriveVelocitySubscriber(
   auto ang_vel_mutex = mutex_list_.back();
 
   // Create the subscriber
-  subscriber_list_.push_back(nh_->subscribe<sensor_msgs::JointState>(
+  subscriber_list_.push_back(nh_->subscribe<custom_sensor_msgs::rp_wheel_encoders>(
       topic_name, 1000,
       boost::bind(&ROSSubscriber::DifferentialEncoder2VelocityCallback, this,
                   _1, vel_mutex, ang_vel_mutex, vel_queue_ptr,
@@ -225,7 +225,7 @@ ROSSubscriber::AddDifferentialDriveLinearVelocitySubscriber_Fetch(
   mutex_list_.emplace_back(new std::mutex);
 
   // Create the subscriber
-  subscriber_list_.push_back(nh_->subscribe<sensor_msgs::JointState>(
+  subscriber_list_.push_back(nh_->subscribe<custom_sensor_msgs::rp_wheel_encoders>(
       topic_name, 1000,
       boost::bind(
           &ROSSubscriber::DifferentialEncoder2LinearVelocityCallback_Fetch,
@@ -294,7 +294,7 @@ ROSSubscriber::AddDifferentialDriveVelocitySubscriber_Fetch(
   auto ang_vel_mutex = mutex_list_.back();
 
   // Create the subscriber
-  subscriber_list_.push_back(nh_->subscribe<sensor_msgs::JointState>(
+  subscriber_list_.push_back(nh_->subscribe<custom_sensor_msgs::rp_wheel_encoders>(
       topic_name, 1000,
       boost::bind(&ROSSubscriber::DifferentialEncoder2VelocityCallback_Fetch,
                   this, _1, vel_mutex, ang_vel_mutex, vel_queue_ptr,
@@ -394,7 +394,7 @@ void ROSSubscriber::VelocityWithCovarianceCallback(
 
 
 void ROSSubscriber::DifferentialEncoder2VelocityCallback(
-    const boost::shared_ptr<const sensor_msgs::JointState>& encoder_msg,
+    const boost::shared_ptr<const custom_sensor_msgs::rp_wheel_encoders>& encoder_msg,
     const std::shared_ptr<std::mutex>& mutex, VelocityQueuePtr& vel_queue,
     double wheel_radius) {
   // Create an velocity measurement object
@@ -421,7 +421,7 @@ void ROSSubscriber::DifferentialEncoder2VelocityCallback(
 }
 
 void ROSSubscriber::DifferentialEncoder2VelocityCallback(
-    const boost::shared_ptr<const sensor_msgs::JointState>& encoder_msg,
+    const boost::shared_ptr<const custom_sensor_msgs::rp_wheel_encoders>& encoder_msg,
     const std::shared_ptr<std::mutex>& vel_mutex,
     const std::shared_ptr<std::mutex>& ang_vel_mutex,
     VelocityQueuePtr& vel_queue, AngularVelocityQueuePtr& ang_vel_queue,
@@ -465,7 +465,7 @@ void ROSSubscriber::DifferentialEncoder2VelocityCallback(
 }
 
 void ROSSubscriber::DifferentialEncoder2LinearVelocityCallback_Fetch(
-    const boost::shared_ptr<const sensor_msgs::JointState>& encoder_msg,
+    const boost::shared_ptr<const custom_sensor_msgs::rp_wheel_encoders>& encoder_msg,
     const std::shared_ptr<std::mutex>& vel_mutex, VelocityQueuePtr& vel_queue,
     double wheel_radius) {
   // Create an velocity measurement object
@@ -496,7 +496,7 @@ void ROSSubscriber::DifferentialEncoder2LinearVelocityCallback_Fetch(
 }
 
 void ROSSubscriber::DifferentialEncoder2VelocityCallback_Fetch(
-    const boost::shared_ptr<const sensor_msgs::JointState>& encoder_msg,
+    const boost::shared_ptr<const custom_sensor_msgs::rp_wheel_encoders>& encoder_msg,
     const std::shared_ptr<std::mutex>& vel_mutex,
     const std::shared_ptr<std::mutex>& ang_vel_mutex,
     VelocityQueuePtr& vel_queue, AngularVelocityQueuePtr& ang_vel_queue,
