@@ -151,14 +151,14 @@ bool VelocityCorrection::initialize(RobotState& state) {
   // Get measurement from sensor data buffer
   // Do not initialize if the buffer is emptys
   while (sensor_data_buffer_ptr_->empty()) {
-    // std::cout << "Waiting for velocity related encoder data..." << std::endl;
+    std::cout << "Waiting for velocity related encoder data..." << std::endl;
     return false;
   }
 
   sensor_data_buffer_mutex_ptr_.get()->lock();
   // Get the latest measurement
   while (sensor_data_buffer_ptr_->size() > 1) {
-    // std::cout << "Discarding old sensor data..." << std::endl;
+    std::cout << "Discarding old sensor data..." << std::endl;
     sensor_data_buffer_ptr_->pop();
   }
   VelocityMeasurementPtr measured_velocity = sensor_data_buffer_ptr_->front();
