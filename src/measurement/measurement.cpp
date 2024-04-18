@@ -52,6 +52,9 @@ ostream& operator<<(ostream& os, const Measurement& m) {
     case JOINT_STATE:
       type_str = "JOINT_STATE";
       break;
+    case WHEEL_ENCODERS:
+      type_str = "WHEEL_ENCODERS";
+      break;
     case CONTACT:
       type_str = "CONTACT";
       break;

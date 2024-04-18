@@ -27,6 +27,7 @@ ROSSubscriber::~ROSSubscriber() {
   subscriber_list_.clear();
   contact_subscriber_list_.clear();
   joint_state_subscriber_list_.clear();
+  wheel_encoder_subscriber_list_.clear();
   imu_queue_list_.clear();
 }
 
@@ -171,7 +172,7 @@ VelocityQueuePair ROSSubscriber::AddDifferentialDriveVelocitySubscriber(
   mutex_list_.emplace_back(new std::mutex);
 
   // Create the subscriber
-  subscriber_list_.push_back(nh_->subscribe<custom_sensor_msgs::rp_wheel_encoders>(
+  subscriber_list_.push_back(nh_->subscribe<racepak::rp_wheel_encoders>(
       topic_name, 1000,
       boost::bind(&ROSSubscriber::DifferentialEncoder2VelocityCallback, this,
                   _1, mutex_list_.back(), vel_queue_ptr, wheel_radius)));
@@ -199,7 +200,7 @@ ROSSubscriber::AddDifferentialDriveVelocitySubscriber(
   auto ang_vel_mutex = mutex_list_.back();
 
   // Create the subscriber
-  subscriber_list_.push_back(nh_->subscribe<custom_sensor_msgs::rp_wheel_encoders>(
+  subscriber_list_.push_back(nh_->subscribe<racepak::rp_wheel_encoders>(
       topic_name, 1000,
       boost::bind(&ROSSubscriber::DifferentialEncoder2VelocityCallback, this,
                   _1, vel_mutex, ang_vel_mutex, vel_queue_ptr,
@@ -225,7 +226,7 @@ ROSSubscriber::AddDifferentialDriveLinearVelocitySubscriber_Fetch(
   mutex_list_.emplace_back(new std::mutex);
 
   // Create the subscriber
-  subscriber_list_.push_back(nh_->subscribe<custom_sensor_msgs::rp_wheel_encoders>(
+  subscriber_list_.push_back(nh_->subscribe<racepak::rp_wheel_encoders>(
       topic_name, 1000,
       boost::bind(
           &ROSSubscriber::DifferentialEncoder2LinearVelocityCallback_Fetch,
@@ -294,7 +295,7 @@ ROSSubscriber::AddDifferentialDriveVelocitySubscriber_Fetch(
   auto ang_vel_mutex = mutex_list_.back();
 
   // Create the subscriber
-  subscriber_list_.push_back(nh_->subscribe<custom_sensor_msgs::rp_wheel_encoders>(
+  subscriber_list_.push_back(nh_->subscribe<racepak::rp_wheel_encoders>(
       topic_name, 1000,
       boost::bind(&ROSSubscriber::DifferentialEncoder2VelocityCallback_Fetch,
                   this, _1, vel_mutex, ang_vel_mutex, vel_queue_ptr,
@@ -394,7 +395,7 @@ void ROSSubscriber::VelocityWithCovarianceCallback(
 
 
 void ROSSubscriber::DifferentialEncoder2VelocityCallback(
-    const boost::shared_ptr<const custom_sensor_msgs::rp_wheel_encoders>& encoder_msg,
+    const boost::shared_ptr<const racepak::rp_wheel_encoders>& encoder_msg,
     const std::shared_ptr<std::mutex>& mutex, VelocityQueuePtr& vel_queue,
     double wheel_radius) {
   // Create an velocity measurement object
@@ -402,15 +403,15 @@ void ROSSubscriber::DifferentialEncoder2VelocityCallback(
       new VelocityMeasurement<double>);
 
   // Set headers and time stamps
-  vel_measurement->set_header(
-      encoder_msg->header.seq,
-      encoder_msg->header.stamp.sec
-          + encoder_msg->header.stamp.nsec / 1000000000.0,
-      encoder_msg->header.frame_id);
+//   vel_measurement->set_header(
+//       encoder_msg->header.seq,
+//       encoder_msg->header.stamp.sec
+//           + encoder_msg->header.stamp.nsec / 1000000000.0,
+//       encoder_msg->header.frame_id);
   double RPM_TO_RadPS = 2*3.14159265/60;
-  double vr = RPM_TO_RadPS*(encoder_msg->velocity[1] + encoder_msg->velocity[3]) / 2.0 
+  double vr = RPM_TO_RadPS*(encoder_msg->front_right + encoder_msg->rear_right) / 2.0 
               * wheel_radius;
-  double vl = RPM_TO_RadPS*(encoder_msg->velocity[0] + encoder_msg->velocity[2]) / 2.0
+  double vl = RPM_TO_RadPS*(encoder_msg->front_left + encoder_msg->rear_left) / 2.0
               * wheel_radius;
   double vx = (vr + vl) / 2.0;
 
@@ -421,7 +422,7 @@ void ROSSubscriber::DifferentialEncoder2VelocityCallback(
 }
 
 void ROSSubscriber::DifferentialEncoder2VelocityCallback(
-    const boost::shared_ptr<const custom_sensor_msgs::rp_wheel_encoders>& encoder_msg,
+    const boost::shared_ptr<const racepak::rp_wheel_encoders>& encoder_msg,
     const std::shared_ptr<std::mutex>& vel_mutex,
     const std::shared_ptr<std::mutex>& ang_vel_mutex,
     VelocityQueuePtr& vel_queue, AngularVelocityQueuePtr& ang_vel_queue,
@@ -432,22 +433,22 @@ void ROSSubscriber::DifferentialEncoder2VelocityCallback(
   std::shared_ptr<AngularVelocityMeasurement<double>> ang_vel_measurement(
       new AngularVelocityMeasurement<double>);
 
-  // Set headers and time stamps
-  vel_measurement->set_header(
-      encoder_msg->header.seq,
-      encoder_msg->header.stamp.sec
-          + encoder_msg->header.stamp.nsec / 1000000000.0,
-      encoder_msg->header.frame_id);
+//   // Set headers and time stamps
+//   vel_measurement->set_header(
+//       encoder_msg->header.seq,
+//       encoder_msg->header.stamp.sec
+//           + encoder_msg->header.stamp.nsec / 1000000000.0,
+//       encoder_msg->header.frame_id);
 
-  ang_vel_measurement->set_header(
-      encoder_msg->header.seq,
-      encoder_msg->header.stamp.sec
-          + encoder_msg->header.stamp.nsec / 1000000000.0,
-      encoder_msg->header.frame_id);
+//   ang_vel_measurement->set_header(
+//       encoder_msg->header.seq,
+//       encoder_msg->header.stamp.sec
+//           + encoder_msg->header.stamp.nsec / 1000000000.0,
+//       encoder_msg->header.frame_id);
 
-  double vr = (encoder_msg->velocity[1] + encoder_msg->velocity[3]) / 2.0
+  double vr = (encoder_msg->front_right + encoder_msg->rear_right) / 2.0
               * wheel_radius;
-  double vl = (encoder_msg->velocity[0] + encoder_msg->velocity[2]) / 2.0
+  double vl = (encoder_msg->front_left + encoder_msg->rear_left) / 2.0
               * wheel_radius;
   double vx = (vr + vl) / 2.0;
   double omega_z = (vr - vl) / track_width;
@@ -465,7 +466,7 @@ void ROSSubscriber::DifferentialEncoder2VelocityCallback(
 }
 
 void ROSSubscriber::DifferentialEncoder2LinearVelocityCallback_Fetch(
-    const boost::shared_ptr<const custom_sensor_msgs::rp_wheel_encoders>& encoder_msg,
+    const boost::shared_ptr<const racepak::rp_wheel_encoders>& encoder_msg,
     const std::shared_ptr<std::mutex>& vel_mutex, VelocityQueuePtr& vel_queue,
     double wheel_radius) {
   // Create an velocity measurement object
@@ -473,20 +474,20 @@ void ROSSubscriber::DifferentialEncoder2LinearVelocityCallback_Fetch(
       new VelocityMeasurement<double>);
 
   // Set headers and time stamps
-  vel_measurement->set_header(
-      encoder_msg->header.seq,
-      encoder_msg->header.stamp.sec
-          + encoder_msg->header.stamp.nsec / 1000000000.0,
-      encoder_msg->header.frame_id);
+//   vel_measurement->set_header(
+//       encoder_msg->header.seq,
+//       encoder_msg->header.stamp.sec
+//           + encoder_msg->header.stamp.nsec / 1000000000.0,
+//       encoder_msg->header.frame_id);
 
   // Fetch
-  if (encoder_msg->velocity.size() <= 2) {
-    // velocity message from wheel encoder is in an array of size greater than 2
-    return;
-  }
+//   if (encoder_msg->velocity.size() <= 2) {
+//     // velocity message from wheel encoder is in an array of size greater than 2
+//     return;
+//   }
 
-  double vr = encoder_msg->velocity[1] * wheel_radius;
-  double vl = encoder_msg->velocity[0] * wheel_radius;
+  double vr = encoder_msg->front_right * wheel_radius;
+  double vl = encoder_msg->front_left * wheel_radius;
   double vx = (vr + vl) / 2.0;
 
   vel_measurement->set_velocity(vx, 0, 0);
@@ -496,7 +497,7 @@ void ROSSubscriber::DifferentialEncoder2LinearVelocityCallback_Fetch(
 }
 
 void ROSSubscriber::DifferentialEncoder2VelocityCallback_Fetch(
-    const boost::shared_ptr<const custom_sensor_msgs::rp_wheel_encoders>& encoder_msg,
+    const boost::shared_ptr<const racepak::rp_wheel_encoders>& encoder_msg,
     const std::shared_ptr<std::mutex>& vel_mutex,
     const std::shared_ptr<std::mutex>& ang_vel_mutex,
     VelocityQueuePtr& vel_queue, AngularVelocityQueuePtr& ang_vel_queue,
@@ -508,26 +509,26 @@ void ROSSubscriber::DifferentialEncoder2VelocityCallback_Fetch(
       new AngularVelocityMeasurement<double>);
 
   // Set headers and time stamps
-  vel_measurement->set_header(
-      encoder_msg->header.seq,
-      encoder_msg->header.stamp.sec
-          + encoder_msg->header.stamp.nsec / 1000000000.0,
-      encoder_msg->header.frame_id);
+//   vel_measurement->set_header(
+//       encoder_msg->header.seq,
+//       encoder_msg->header.stamp.sec
+//           + encoder_msg->header.stamp.nsec / 1000000000.0,
+//       encoder_msg->header.frame_id);
 
-  ang_vel_measurement->set_header(
-      encoder_msg->header.seq,
-      encoder_msg->header.stamp.sec
-          + encoder_msg->header.stamp.nsec / 1000000000.0,
-      encoder_msg->header.frame_id);
+//   ang_vel_measurement->set_header(
+//       encoder_msg->header.seq,
+//       encoder_msg->header.stamp.sec
+//           + encoder_msg->header.stamp.nsec / 1000000000.0,
+//       encoder_msg->header.frame_id);
 
-  // Fetch
-  if (encoder_msg->velocity.size() <= 2) {
-    // velocity message from wheel encoder is in an array of size greater than 2
-    return;
-  }
+//   // Fetch
+//   if (encoder_msg->velocity.size() <= 2) {
+//     // velocity message from wheel encoder is in an array of size greater than 2
+//     return;
+//   }
 
-  double vr = encoder_msg->velocity[1] * wheel_radius;
-  double vl = encoder_msg->velocity[0] * wheel_radius;
+  double vr = encoder_msg->front_right * wheel_radius;
+  double vl = encoder_msg->rear_right * wheel_radius;
   double vx = (vr + vl) / 2.0;
   double omega_z = (vr - vl) / track_width;
 

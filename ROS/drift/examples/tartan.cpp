@@ -78,8 +78,8 @@ int main(int argc, char** argv) {
   /// for Husky robot
   inekf_estimator.add_imu_propagation(
       qimu, qimu_mutex, project_dir + "/config/tartan/imu_propagation.yaml");
-  // inekf_estimator.add_velocity_correction(
-  //     qv, qv_mutex, project_dir + "/config/tartan/velocity_correction.yaml");
+  inekf_estimator.add_velocity_correction(
+      qv, qv_mutex, project_dir + "/config/tartan/velocity_correction.yaml");
 
 
   /// TUTORIAL: Get the robot state queue and mutex from the state estimator

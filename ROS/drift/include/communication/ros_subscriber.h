@@ -68,12 +68,14 @@ typedef message_filters::Subscriber<custom_sensor_msgs::ContactArray>
     ContactMsgFilterT; /**< Message filter for contact messages. */
 typedef message_filters::Subscriber<sensor_msgs::JointState>
     JointStateMsgFilterT; /**< Message filter for joint state messages. */
+typedef message_filters::Subscriber<racepak::rp_wheel_encoders>
+    WheelEncoderMsgFilterT; /**< Message filter for joint state messages. */
 typedef std::shared_ptr<
     message_filters::Subscriber<custom_sensor_msgs::ContactArray>>
     ContactMsgFilterTPtr; /**< Pointer to the ContactMsgFilterT. */
 typedef std::shared_ptr<message_filters::Subscriber<sensor_msgs::JointState>>
     JointStateMsgFilterTPtr; /**< Pointer to the JointStateMsgFilterT. */
-typedef std::shared_ptr<message_filters::Subscriber<custom_sensor_msgs::rp_wheel_encoders>>
+typedef std::shared_ptr<message_filters::Subscriber<racepak::rp_wheel_encoders>>
     WheelEncoderMsgFilterTPtr; /**< Pointer to the JointStateMsgFilterT. */
 typedef message_filters::sync_policies::ApproximateTime<
     custom_sensor_msgs::ContactArray, sensor_msgs::JointState>
@@ -301,7 +303,7 @@ class ROSSubscriber {
    * @param vel_queue: pointer to the buffer queue
    */
   void DifferentialEncoder2VelocityCallback(
-      const boost::shared_ptr<const custom_sensor_msgs::rp_wheel_encoders>& encoder_msg,
+      const boost::shared_ptr<const racepak::rp_wheel_encoders>& encoder_msg,
       const std::shared_ptr<std::mutex>& mutex, VelocityQueuePtr& vel_queue,
       double wheel_radius);
 
@@ -317,7 +319,7 @@ class ROSSubscriber {
    * @param[in] track_width: distance between the two wheels in meters
    */
   void DifferentialEncoder2VelocityCallback(
-      const boost::shared_ptr<const custom_sensor_msgs::rp_wheel_encoders>& encoder_msg,
+      const boost::shared_ptr<const racepak::rp_wheel_encoders>& encoder_msg,
       const std::shared_ptr<std::mutex>& vel_mutex,
       const std::shared_ptr<std::mutex>& ang_vel_mutex,
       VelocityQueuePtr& vel_queue, AngularVelocityQueuePtr& ang_vel_queue,
@@ -334,7 +336,7 @@ class ROSSubscriber {
    * @param track_width: track width
    */
   void DifferentialEncoder2LinearVelocityCallback_Fetch(
-      const boost::shared_ptr<const custom_sensor_msgs::rp_wheel_encoders>& encoder_msg,
+      const boost::shared_ptr<const racepak::rp_wheel_encoders>& encoder_msg,
       const std::shared_ptr<std::mutex>& vel_mutex, VelocityQueuePtr& vel_queue,
       double wheel_radius);
 
@@ -351,7 +353,7 @@ class ROSSubscriber {
    * @param track_width: distance between the two wheels in meters
    */
   void DifferentialEncoder2VelocityCallback_Fetch(
-      const boost::shared_ptr<const custom_sensor_msgs::rp_wheel_encoders>& encoder_msg,
+      const boost::shared_ptr<const racepak::rp_wheel_encoders>& encoder_msg,
       const std::shared_ptr<std::mutex>& vel_mutex,
       const std::shared_ptr<std::mutex>& ang_vel_mutex,
       VelocityQueuePtr& vel_queue, AngularVelocityQueuePtr& ang_vel_queue,

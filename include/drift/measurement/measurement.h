@@ -26,6 +26,7 @@ enum MeasurementType {
   VELOCITY,
   ANGULAR_VELOCITY,
   JOINT_STATE,
+  WHEEL_ENCODERS,
   CONTACT,
   ODOM
 };
