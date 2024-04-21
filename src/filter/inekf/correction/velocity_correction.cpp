@@ -99,7 +99,7 @@ bool VelocityCorrection::Correct(RobotState& state) {
   sensor_data_buffer_ptr_->pop();
   sensor_data_buffer_mutex_ptr_->unlock();
   // std::cout << "measured_vel: " << measured_velocity->get_time() <<  std::endl;
-  // Ignoring this code because our velocity measurement time is screwy
+  // Ignoring this code because our velocity timestamps are screwy
   // if (t_diff < -t_diff_thres_) {
   //   while (t_diff < -t_diff_thres_) {
   //     sensor_data_buffer_mutex_ptr_->lock();

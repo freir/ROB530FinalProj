@@ -59,9 +59,10 @@ int main(int argc, char** argv) {
   // auto qv_and_mutex = ros_sub.AddDifferentialDriveVelocitySubscriber(
   //     wheel_encoder_topic, wheel_radius);
   auto wheel_radius_meters = 0.37; // nominal value is 25in diameter (32cm radius), experimental value 37cm
-  auto qv_and_mutex = ros_sub.AddDifferentialDriveVelocitySubscriber(velocity_topic, wheel_radius_meters);
-  auto qv = qv_and_mutex.first;
-  auto qv_mutex = qv_and_mutex.second;
+  auto track_width = 1; // Track width of yamaha atv in m (somehow it's actually 1 lol)
+  auto qv_and_mutex = ros_sub.AddDifferentialDriveVelocitySubscriber(velocity_topic, wheel_radius_meters, track_width);
+  auto qv = std::get<0>(qv_and_mutex);
+  auto qv_mutex = std::get<1>(qv_and_mutex);
 
   /// TUTORIAL: Start the subscriber thread
   ros_sub.StartSubscribingThread();

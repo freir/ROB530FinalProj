@@ -29,7 +29,7 @@ class WheelEncodersPublisher:
 
     def load_csv_data(self):
         rpm_data = []
-        with open('csv0910_wheel_rpm/20210910_0-wheel_rpm.csv', 'r') as csv_file:
+        with open('csv0910_wheel_rpm/20210910_30-wheel_rpm.csv', 'r') as csv_file:
             csv_reader = csv.DictReader(csv_file, delimiter=',')
             for row in csv_reader:
                 # Parse the timestamp from the first column

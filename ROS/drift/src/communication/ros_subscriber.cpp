@@ -515,10 +515,10 @@ void ROSSubscriber::DifferentialEncoder2VelocityCallback(
       }
     }
   }
-
-  double vr = (front_right_vel + rear_right_vel) / 2.0
+  double RPM_TO_RadPS = 2*3.14159265/60;
+  double vr = RPM_TO_RadPS*(front_right_vel + rear_right_vel) / 2.0
               * wheel_radius;
-  double vl = (front_left_vel + rear_left_vel) / 2.0
+  double vl = RPM_TO_RadPS*(front_left_vel + rear_left_vel) / 2.0
               * wheel_radius;
   double vx = (vr + vl) / 2.0;
   double omega_z = (vr - vl) / track_width;
