@@ -447,10 +447,78 @@ void ROSSubscriber::DifferentialEncoder2VelocityCallback(
 //       encoder_msg->header.stamp.sec
 //           + encoder_msg->header.stamp.nsec / 1000000000.0,
 //       encoder_msg->header.frame_id);
+  
+  bool ignore_wheel_slip = true;
 
-  double vr = (encoder_msg->front_right + encoder_msg->rear_right) / 2.0
+  double front_left_vel = encoder_msg->front_left;
+  double front_right_vel = encoder_msg->front_right;
+  double rear_left_vel = encoder_msg->rear_left;
+  double rear_right_vel = encoder_msg->rear_right;
+
+  if (ignore_wheel_slip) {
+    // do nothing
+  }
+  else {
+    // find the median value of the 4 velocities
+    double sum = front_left_vel + front_right_vel + rear_left_vel + rear_right_vel;
+    // find max value
+    double max = front_left_vel;
+    if (max < front_right_vel){
+      max = front_right_vel;
+    }
+    if (max < rear_left_vel){
+      max = rear_left_vel;
+    }
+    if (max < rear_right_vel){
+      max = rear_right_vel;
+    }
+    // find min value
+    double min = front_left_vel;
+    if (min > front_right_vel){
+      min = front_right_vel;
+    }
+    if (min > rear_left_vel){
+      min = rear_left_vel;
+    }
+    if (max > rear_right_vel){
+      min = rear_right_vel;
+    }
+    // 4 data points: median = (total - max - min) / 2
+    double median = (sum - max - min) * 0.5;
+
+    // assume wheel slip if wheel > threshold above median
+    // replace slipping wheel velo with other wheel velo of same side
+    // ignoring outlier wheel speeds below median
+    double threshold = 0.3;
+
+    if ((front_left_vel - median)/median > (threshold/2)){
+      if (rear_left_vel < front_left_vel){
+        front_left_vel = rear_left_vel;
+      }
+    }
+
+    if ((rear_left_vel - median)/median > (threshold/2)){
+      if (front_left_vel < rear_left_vel){
+        rear_left_vel = front_left_vel;
+      }
+    }
+
+    if ((front_right_vel - median)/median > (threshold/2)){
+      if (rear_right_vel < front_right_vel){
+        front_right_vel = rear_right_vel;
+      }
+    }
+
+    if ((rear_right_vel - median)/median > (threshold/2)){
+      if (front_right_vel < rear_right_vel){
+        rear_right_vel = front_right_vel;
+      }
+    }
+  }
+
+  double vr = (front_right_vel + rear_right_vel) / 2.0
               * wheel_radius;
-  double vl = (encoder_msg->front_left + encoder_msg->rear_left) / 2.0
+  double vl = (front_left_vel + rear_left_vel) / 2.0
               * wheel_radius;
   double vx = (vr + vl) / 2.0;
   double omega_z = (vr - vl) / track_width;
