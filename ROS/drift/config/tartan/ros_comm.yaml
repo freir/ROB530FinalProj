@@ -2,7 +2,7 @@ subscribers:
   # Name all the topics to subscribe from in this section. You may also redefine the variable name
   # as long as you can load the yaml variable in your main file
   imu_topic: "/multisense/imu/imu_data"
-  velocity_topic: "/wheel_rpm"
+  velocity_topic: "/wheel_rpm_republished"
 
 publishers:
   # Define publish rate and topics for publishers

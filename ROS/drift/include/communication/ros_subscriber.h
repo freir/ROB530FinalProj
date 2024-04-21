@@ -43,7 +43,8 @@
 #include "drift/kinematics/mini_cheetah_kinematics.h"
 #include "drift/utils/type_def.h"
 
-#include "custom_sensor_msgs/rp_wheel_encoders.h"
+// #include "custom_sensor_msgs/rp_wheel_encoders.h"
+#include "../../../../../catkin_ws/devel/include/racepak/rp_wheel_encoders.h"
 
 using namespace measurement;
 

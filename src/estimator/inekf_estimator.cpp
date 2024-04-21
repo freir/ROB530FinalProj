@@ -249,6 +249,9 @@ void InekfEstimator::InitBias() {
 }
 
 void InekfEstimator::InitState() {
+
+  
+
   // Initialize state mean
   bool propagation_initialized = propagation_.get()->set_initial_state(state_);
   if (!propagation_initialized) {
@@ -260,6 +263,18 @@ void InekfEstimator::InitState() {
     while (!current_correction_initialized)
       current_correction_initialized = correction_.get()->initialize(state_);
   }
+
+  // SET THE ROBOT INITIAL STATE MANUALLY
+  // Test 30
+  // Eigen::Vector3d position(435.3381163185695,-170.3207459608093,-45.48856920469552);
+  // Eigen::Quaterniond quaternion(0.72459,0.038864,-0.0047095,0.68807);
+  // // Construct rotation matrix from quaternion
+  // Eigen::Matrix3d R = quaternion.toRotationMatrix();
+
+  // state_.set_rotation(R);
+  // state_.set_position(position);
+  // state_.set_body_angular_velocity(Eigen::Vector3d::Zero());
+  // state_.set_velocity(Eigen::Vector3d::Zero());
 
   // Initialize state covariance
   state_.set_rotation_covariance(rotation_cov_val_

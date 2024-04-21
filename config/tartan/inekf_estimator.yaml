@@ -1,8 +1,8 @@
 logger:
   # This logger will output a txt file in tum style
   enable_pose_logger: true
-  pose_log_file: "/media/justin/DATA/result/DRIFT_TRO/tartan/test.txt"
-  vel_log_file: "/media/justin/DATA/result/DRIFT_TRO/tartan/test_velocity.txt"
+  pose_log_file: "/home/freir/MobRobFinalProj/drift/ros_Logs/test0.txt"
+  vel_log_file: "/home/freir/MobRobFinalProj/drift/ros_Logs/test_velocity0.txt"
   pose_log_rate: 100 # Hz
 state:
   rotation_std_value: 0.1

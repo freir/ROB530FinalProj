@@ -86,34 +86,37 @@ bool VelocityCorrection::Correct(RobotState& state) {
     sensor_data_buffer_mutex_ptr_->unlock();
     return false;
   }
+  
   VelocityMeasurementPtr measured_velocity = sensor_data_buffer_ptr_->front();
   double t_diff = measured_velocity->get_time() - state.get_propagate_time();
   // Only use previous velocity measurement to correct the state
   if (t_diff >= 0) {
+    std::cout << "Ignoring data b/c it lacks time" << std::endl;
     sensor_data_buffer_mutex_ptr_->unlock();
     return false;
   }
 
   sensor_data_buffer_ptr_->pop();
   sensor_data_buffer_mutex_ptr_->unlock();
+  // std::cout << "measured_vel: " << measured_velocity->get_time() <<  std::endl;
+  // Ignoring this code because our velocity measurement time is screwy
+  // if (t_diff < -t_diff_thres_) {
+  //   while (t_diff < -t_diff_thres_) {
+  //     sensor_data_buffer_mutex_ptr_->lock();
+  //     if (sensor_data_buffer_ptr_->empty()) {
+  //       sensor_data_buffer_mutex_ptr_->unlock();
+  //       return false;
+  //     }
+  //     measured_velocity = sensor_data_buffer_ptr_->front();
+  //     sensor_data_buffer_ptr_->pop();
+  //     sensor_data_buffer_mutex_ptr_->unlock();
 
-  if (t_diff < -t_diff_thres_) {
-    while (t_diff < -t_diff_thres_) {
-      sensor_data_buffer_mutex_ptr_->lock();
-      if (sensor_data_buffer_ptr_->empty()) {
-        sensor_data_buffer_mutex_ptr_->unlock();
-        return false;
-      }
-      measured_velocity = sensor_data_buffer_ptr_->front();
-      sensor_data_buffer_ptr_->pop();
-      sensor_data_buffer_mutex_ptr_->unlock();
-
-      t_diff = measured_velocity->get_time() - state.get_propagate_time();
-    }
-  }
+  //     t_diff = measured_velocity->get_time() - state.get_propagate_time();
+  //   }
+  // }
 
   state.set_time(measured_velocity->get_time());
-
+  // std::cout<< "SUCCESS!" <<std::endl;
   // Fill out H
   H.conservativeResize(3, dimP);
   H.block(0, 0, 3, dimP) = Eigen::MatrixXd::Zero(3, dimP);

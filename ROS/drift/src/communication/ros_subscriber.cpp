@@ -161,6 +161,7 @@ VelocityQueuePair ROSSubscriber::AddVelocityWithCovarianceSubscriber(
   return {vel_queue_ptr, mutex_list_.back()};
 }
 
+// Tartan uses this one!
 VelocityQueuePair ROSSubscriber::AddDifferentialDriveVelocitySubscriber(
     const std::string topic_name, double wheel_radius) {
   std::cout << "Subscribing to wheel encoder topic: " << topic_name
@@ -170,7 +171,6 @@ VelocityQueuePair ROSSubscriber::AddDifferentialDriveVelocitySubscriber(
 
   // Initialize a new mutex for this subscriber
   mutex_list_.emplace_back(new std::mutex);
-
   // Create the subscriber
   subscriber_list_.push_back(nh_->subscribe<racepak::rp_wheel_encoders>(
       topic_name, 1000,
@@ -345,6 +345,7 @@ void ROSSubscriber::IMUCallback(
         imu_msg->orientation.z);
   }
 
+//  std::cout << "Setting IMU\n";
   mutex.get()->lock();
   imu_queue->push(imu_measurement);
   mutex.get()->unlock();
@@ -393,7 +394,7 @@ void ROSSubscriber::VelocityWithCovarianceCallback(
   mutex.get()->unlock();
 }
 
-
+// THIS IS THE TARTAN ONE
 void ROSSubscriber::DifferentialEncoder2VelocityCallback(
     const boost::shared_ptr<const racepak::rp_wheel_encoders>& encoder_msg,
     const std::shared_ptr<std::mutex>& mutex, VelocityQueuePtr& vel_queue,
@@ -418,6 +419,7 @@ void ROSSubscriber::DifferentialEncoder2VelocityCallback(
   vel_measurement->set_velocity(vx, 0, 0);
   mutex.get()->lock();
   vel_queue->push(vel_measurement);
+  // std::cout << "Publishing velocity " << vx << " m/s" << std::endl;
   mutex.get()->unlock();
 }
 
@@ -452,6 +454,8 @@ void ROSSubscriber::DifferentialEncoder2VelocityCallback(
               * wheel_radius;
   double vx = (vr + vl) / 2.0;
   double omega_z = (vr - vl) / track_width;
+
+  
 
   vel_measurement->set_velocity(vx, 0, 0);
   ang_vel_measurement->set_angular_velocity(0, 0, omega_z);
@@ -489,6 +493,8 @@ void ROSSubscriber::DifferentialEncoder2LinearVelocityCallback_Fetch(
   double vr = encoder_msg->front_right * wheel_radius;
   double vl = encoder_msg->front_left * wheel_radius;
   double vx = (vr + vl) / 2.0;
+
+  
 
   vel_measurement->set_velocity(vx, 0, 0);
   vel_mutex.get()->lock();
@@ -531,6 +537,8 @@ void ROSSubscriber::DifferentialEncoder2VelocityCallback_Fetch(
   double vl = encoder_msg->rear_right * wheel_radius;
   double vx = (vr + vl) / 2.0;
   double omega_z = (vr - vl) / track_width;
+
+  
 
   vel_measurement->set_velocity(vx, 0, 0);
   ang_vel_measurement->set_angular_velocity(0, 0, omega_z);
